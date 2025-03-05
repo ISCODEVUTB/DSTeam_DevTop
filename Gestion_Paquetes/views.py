@@ -1,6 +1,6 @@
 class Menu:
     # Constructor de la clase Menu
-    def _init_(self, name):
+    def __init__(self, name):
         self.name = name
         self.options = {}
 
@@ -29,9 +29,9 @@ class Menu:
                 print("Opción no válida. Intente de nuevo.")
 
 # Clase para el menú de logueo
-def LoginMenu(Menu):
+class LoginMenu(Menu):
     def __init__(self):
-        super()._init_("Menú de Logueo")
+        super().__init__("Menú de Logueo")
         self.add_option("1", "Loguearse", self.login)
         self.add_option("2", "Registrarse", self.register)
         self.add_option("q", "Salir", self.leave)
@@ -47,9 +47,9 @@ def LoginMenu(Menu):
         RegisterMenu().run()
 
 # Clase para el menú principal
-def MainMenu(Menu):
+class MainMenu(Menu):
     def __init__(self):
-        super()._init_("Menú Principal")
+        super().__init__("Menú Principal")
         self.add_option("1", "Menú de Paquetes", self.MenuPackage)
         self.add_option("2", "Menú de Envíos", self.MenuShipment)
         self.add_option("3", "Menú de Facturas", self.InvoicesMenu)
@@ -75,9 +75,9 @@ def MainMenu(Menu):
         print("Saliendo del sistema...")
 
 # Clase para el menú de paquetes
-def MenuPackage(Menu):
+class MenuPackage(Menu):
     def __init__(self):
-        super()._init_("Menú de Paquetes")
+        super().__init__("Menú de Paquetes")
         self.add_option("1", "Ver paquetes", self.show_packages)
         self.add_option("2", "Agregar paquete", self.add_package)
         self.add_option("3", "Modificar paquete", self.modify_package)
@@ -107,12 +107,12 @@ def MenuPackage(Menu):
     # Método para volver al menú principal
     def back(self):
         print("Volviendo al menú principal...")
-        MainMenu().run()
+        main_menu.run()
 
 # Clase para el menú de envíos
-def MenuShipment(Menu):
+class MenuShipment(Menu):
     def __init__(self):
-        super()._init_("Menú de Envíos")
+        super().__init__("Menú de Envíos")
         self.add_option("1", "Ver envíos", self.show_shipments)
         self.add_option("2", "Agregar envío", self.add_shipment)
         self.add_option("3", "Modificar envío", self.modify_shipment)
@@ -142,12 +142,12 @@ def MenuShipment(Menu):
     # Método para volver al menú principal
     def back(self):
         print("Volviendo al menú principal...")
-        MainMenu().run()
+        main_menu.run()
 
 # Clase para el menú de facturas
-def InvoicesMenu(Menu):
+class InvoicesMenu(Menu):
     def __init__(self):
-        super()._init_("Menú de Facturas")
+        super().__init__("Menú de Facturas")
         self.add_option("1", "Ver facturas", self.show_invoices)
         self.add_option("2", "Eliminar factura", self.delete_invoice)
         self.add_option("e", "Volver", self.back)
@@ -165,18 +165,21 @@ def InvoicesMenu(Menu):
     # Método para volver al menú principal
     def back(self):
         print("Volviendo al menú principal...")
-        MainMenu().run()
+        main_menu.run()
 
 # Clase para el menú de logueo
-def LoginMenu(Menu):
+class LoginMenu(Menu):
     def __init__(self):
-        super()._init_("Menú de Logueo")
+        super().__init__("Menú de Logueo")
         self.add_option("1", "Ingresar usuario", self.username)
         self.add_option("2", "Ingresar contraseña", self.password)
 
 # Clase para el menú de registro
-def RegisterMenu(Menu):
+class RegisterMenu(Menu):
     def __init__(self):
-        super()._init_("Menú de Registro")
+        super().__init__("Menú de Registro")
         self.add_option("1", "Ingresar usuario", self.username)
         self.add_option("2", "Ingresar contraseña", self.password)
+
+main_menu = MainMenu()  # Renamed instance to avoid conflict
+main_menu.run()
