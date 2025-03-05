@@ -11,7 +11,7 @@ class Menu:
         for clave, (description, _) in self.options.items():
             print(f"{clave}. {description}")
 
-    def ejecutar(self):
+    def run(self):
         while True:
             self.show()
             option = input("Seleccione una opción (o 'q' para salir): ")
@@ -33,26 +33,34 @@ def LoginMenu(Menu):
 
     def login(self):
         print("Logueando...")
-        LoginMenu().ejecutar()
+        LoginMenu().run()
 
     def register(self):
         print("Registrando...")
-        RegisterMenu().ejecutar()
+        RegisterMenu().run()
 
 def MainMenu(Menu):
     def __init__(self):
         super()._init_("Menú Principal")
         self.add_option("1", "Menú de Paquetes", self.MenuPackage)
         self.add_option("2", "Menú de Envíos", self.MenuShipment)
+        self.add_option("3", "Menú de Facturas", self.InvoicesMenu)
         self.add_option("q", "Salir", self.leave)
 
     def MenuPackage(self):
         print("Ingresando al menú de paquetes...")
-        MenuPackage().ejecutar()
+        MenuPackage().run()
 
     def MenuShipment(self):
         print("Ingresando al menú de envíos...")
-        MenuShipment().ejecutar()
+        MenuShipment().run()
+
+    def InvoicesMenu(self):
+        print("Ingresando al menú de facturas...")
+        InvoicesMenu().run()
+
+    def leave(self):
+        print("Saliendo del sistema...")
         
 
 def MenuPackage(Menu):
@@ -62,7 +70,7 @@ def MenuPackage(Menu):
         self.add_option("2", "Agregar paquete", self.add_package)
         self.add_option("3", "Modificar paquete", self.modify_package)
         self.add_option("4", "Eliminar paquete", self.delete_package)
-        self.add_option("q", "Salir", self.leave)
+        self.add_option("e", "Volver", self.back)
 
     def show_packages(self):
         print("Mostrando paquetes...")
@@ -80,6 +88,10 @@ def MenuPackage(Menu):
         print("Eliminando paquete...")
         # Lógica para eliminar paquete
 
+    def back(self):
+        print("Volviendo al menú principal...")
+        MainMenu().run()
+
 def MenuShipment(Menu):
     def __init__(self):
         super()._init_("Menú de Envíos")
@@ -87,7 +99,46 @@ def MenuShipment(Menu):
         self.add_option("2", "Agregar envío", self.add_shipment)
         self.add_option("3", "Modificar envío", self.modify_shipment)
         self.add_option("4", "Eliminar envío", self.delete_shipment)
-        self.add_option("q", "Salir", self.leave)
+        self.add_option("e", "Volver", self.back)
+
+    def show_shipments(self):
+        print("Mostrando envíos...")
+        # Lógica para mostrar envíos
+
+    def add_shipment(self):
+        print("Agregando envío...")
+        # Lógica para agregar envío
+
+    def modify_shipment(self):
+        print("Modificando envío...")
+        # Lógica para modificar envío
+
+    def delete_shipment(self):
+        print("Eliminando envío...")
+        # Lógica para eliminar     
+    
+    def back(self):
+        print("Volviendo al menú principal...")
+        MainMenu().run()
+
+def InvoicesMenu(Menu):
+    def __init__(self):
+        super()._init_("Menú de Facturas")
+        self.add_option("1", "Ver facturas", self.show_invoices)
+        self.add_option("2", "Eliminar factura", self.delete_invoice)
+        self.add_option("e", "Volver", self.back)      
+
+    def show_invoices(self):
+        print("Mostrando facturas...")
+        # Lógica para mostrar facturas
+
+    def delete_invoice(self):
+        print("Eliminando factura...")
+        # Lógica para eliminar factura
+
+    def back(self):
+        print("Volviendo al menú principal...")
+        MainMenu().run()
 
 def LoginMenu(Menu):
     def __init__(self):
