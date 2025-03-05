@@ -19,7 +19,10 @@ class Envio:
         self.costo = costo
         self.fecha = fecha
 
-class GestionPagos:
-    def __init__(self, envio, monto):
+class factura:
+    def __init__(self, usuario, envio, costo, fecha):
+        self.usuario = usuario
         self.envio = envio
-        self.monto = monto
+        self.costo = costo
+        self.fecha = fecha
+    
