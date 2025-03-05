@@ -1,32 +1,44 @@
-class Paquete:
-    def __init__(self,id_paquete, nombre, peso, destino):
-        self.id_paquete = id_paquete
-        self.nombre = nombre
-        self.peso = peso
-        self.destino = destino
+class Package:
+    def __init__(self, package_id, name, weight, destination):
+        self.package_id = package_id
+        self.name = name
+        self.weight = weight
+        self.destination = destination
+
+    def Update(self, name=None, weight=None, destination=None):
+        if name is not None:
+            self.name = name
+        if weight is not None:
+            self.weight = weight
+        if destination is not None:
+            self.destination = destination
+
+    def __str__(self):
+        return f"Package {self.package_id}: {self.name}, {self.weight} kg, {self.destination}"
 
 
-class Usuario:
-    def __init__(self, id_Usuario,nombre, correo, contraseña, direccion):
-        self.id_Usuario = id_Usuario
-        self.nombre = nombre
-        self.correo = correo
-        self.contraseña = contraseña
-        self.direccion = direccion
+class User:
+    def __init__(self, user_id, name, email, password, address):
+        self.user_id = user_id
+        self.name = name
+        self.email = email
+        self.password = password
+        self.address = address
 
-class Envio:
-    def __init__(self, id_envio, usuario, paquete, costo, fecha):
-        self.id_envio = id_envio
-        self.usuario = usuario
-        self.paquete = paquete
-        self.costo = costo
-        self.fecha = fecha
 
-class factura:
-    def __init__(self, id_factura, usuario, envio, costo, fecha):
-        self.id_factura = id_factura
-        self.usuario = usuario
-        self.envio = envio
-        self.costo = costo
-        self.fecha = fecha
-    
+class Shipment:
+    def __init__(self, shipment_id, user, package, cost, date):
+        self.shipment_id = shipment_id
+        self.user = user
+        self.package = package
+        self.cost = cost
+        self.date = date
+
+
+class Invoice:
+    def __init__(self, invoice_id, user, shipment, cost, date):
+        self.invoice_id = invoice_id
+        self.user = user
+        self.shipment = shipment
+        self.cost = cost
+        self.date = date    
