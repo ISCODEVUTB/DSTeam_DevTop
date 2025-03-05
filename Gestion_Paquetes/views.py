@@ -39,6 +39,31 @@ def MainMenu(Menu):
         print("Registrando...")
         RegisterMenu().ejecutar()
 
+def MenuPackage(Menu):
+    def __init__(self):
+        super()._init_("Menú de Paquetes")
+        self.add_option("1", "Ver paquetes", self.show_packages)
+        self.add_option("2", "Agregar paquete", self.add_package)
+        self.add_option("3", "Modificar paquete", self.modify_package)
+        self.add_option("4", "Eliminar paquete", self.delete_package)
+        self.add_option("q", "Salir", self.leave)
+
+    def show_packages(self):
+        print("Mostrando paquetes...")
+        # Lógica para mostrar paquetes
+
+    def add_package(self):
+        print("Agregando paquete...")
+        # Lógica para agregar paquete
+
+    def modify_package(self):
+        print("Modificando paquete...")
+        # Lógica para modificar paquete
+
+    def delete_package(self):
+        print("Eliminando paquete...")
+        # Lógica para eliminar paquete
+
 def LoginMenu(Menu):
     def __init__(self):
         super()._init_("Menú de Logueo")
