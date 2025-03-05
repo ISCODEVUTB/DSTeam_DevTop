@@ -24,9 +24,9 @@ class Menu:
             else:
                 print("Opción no válida. Intente de nuevo.")
 
-def MainMenu(Menu):
+def LoginMenu(Menu):
     def __init__(self):
-        super()._init_("Menú Principal")
+        super()._init_("Menú de Logueo")
         self.add_option("1", "Loguearse", self.login)
         self.add_option("2", "Registrarse", self.register)
         self.add_option("q", "Salir", self.leave)
@@ -38,6 +38,22 @@ def MainMenu(Menu):
     def register(self):
         print("Registrando...")
         RegisterMenu().ejecutar()
+
+def MainMenu(Menu):
+    def __init__(self):
+        super()._init_("Menú Principal")
+        self.add_option("1", "Menú de Paquetes", self.MenuPackage)
+        self.add_option("2", "Menú de Envíos", self.MenuShipment)
+        self.add_option("q", "Salir", self.leave)
+
+    def MenuPackage(self):
+        print("Ingresando al menú de paquetes...")
+        MenuPackage().ejecutar()
+
+    def MenuShipment(self):
+        print("Ingresando al menú de envíos...")
+        MenuShipment().ejecutar()
+        
 
 def MenuPackage(Menu):
     def __init__(self):
@@ -63,6 +79,15 @@ def MenuPackage(Menu):
     def delete_package(self):
         print("Eliminando paquete...")
         # Lógica para eliminar paquete
+
+def MenuShipment(Menu):
+    def __init__(self):
+        super()._init_("Menú de Envíos")
+        self.add_option("1", "Ver envíos", self.show_shipments)
+        self.add_option("2", "Agregar envío", self.add_shipment)
+        self.add_option("3", "Modificar envío", self.modify_shipment)
+        self.add_option("4", "Eliminar envío", self.delete_shipment)
+        self.add_option("q", "Salir", self.leave)
 
 def LoginMenu(Menu):
     def __init__(self):
