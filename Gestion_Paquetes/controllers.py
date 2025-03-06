@@ -33,6 +33,20 @@ class Manager:
         else:
             print("No se encontro el registro a eliminar")
 
+    def SearchRecord(self,parameters):
+        filtro = pd.Series(True, index=self.data.index)
+
+        for columna, valor in parameters.items():
+            if columna in self.data.columns:  
+                filtro &= self.data[columna] == valor  
+            else:
+                print(f"Advertencia: La columna '{columna}' no existe en el DataFrame.")
+
+        resultado = self.data[filtro]
+
+        return resultado if not resultado.empty else "No se encontraron coincidencias."
+
+
     def Show(self):
         print(self.data)
 
