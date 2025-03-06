@@ -81,8 +81,15 @@ class LoginManager(Manager):
         return not resultado.empty
     
     def SignIn(self):
-        User = User(self.IDGenerator())
-        self.AddRecord(User)
+        ID = self.IDGenerator()
+        username = input("Username: ")
+        password = input("Password: ")
+        email = input("Email: ")
+        address = input("Address: ")
+        permissions = input("Permissions: ")
+
+        user = User(ID,username, password,email,address,permissions)
+        self.AddRecord(user)
 
 class PaymentsManager(Manager):
     def __init__(self):
