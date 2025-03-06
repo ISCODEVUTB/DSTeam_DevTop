@@ -1,28 +1,46 @@
 import pandas as pd
 import os
+import re
 from models import Package,User,Shipment,Invoice
 class Manager:
     def __init__(self, name):
         self.name = name
-        self.n_elements = None
-        self.data = None
+        self.path = "./data/" + self.name + ".csv"  
+        self.data = self.Data()
+        self.n_elements = self.Data['ID'].index()
 
-    def Data(self):
-        self.path = "./data/" + self.name + ".csv"   
-        df = pd.read_csv(self.path) 
-        self.data = df
-    
-    def AddRecord(self, record):
-        NewRecord = pd.DataFrame([[record.values()]], columns = record.keys())
-        self.data = pd.concat([self.data, NewRecord], ignore_index=True)
+    def Data(self): 
+        if os.path.exists(self.path):
+            return pd.read_csv(self.path)
+        else:
+            print("Data no encontrada")
+            return None 
+        
+    def SaveData(self):
         self.data.to_csv(self.path, index=False)
         print("Datos agregados con exito")
+
+    def IDGenerator(self):
+        if not self.data.empty and "ID" in self.data.columns:
+            # Extraer números de los IDs existentes y encontrar el siguiente número
+            existing_ids = self.data["ID"].dropna().astype(str)
+            numbers = [int(re.search(r'\d+', id).group()) for id in existing_ids if re.search(r'\d+', id)]
+            next_number = max(numbers) + 1 if numbers else 1
+        else:
+            next_number = 1  # Si no hay registros, empezar desde 1
+
+        return f"{self.prefix}{next_number:04d}"  # Formato tipo U0001, P0001, etc.
+
+    def AddRecord(self, record):
+        NewRecord = pd.DataFrame([record], columns = record.keys())
+        self.data = pd.concat([self.data, NewRecord], ignore_index=True)
+        self.SaveData()
 
     def EditRecord(self,record):
         SearchID = record['ID']
         if SearchID in self.data["ID"].values:
             self.data.loc[self.data["ID"] == SearchID] = record
-            self.data.to_csv(self.path, index=False)
+            self.SaveData()
         else:
             print("No se encontro el registro a editar")
 
@@ -30,7 +48,7 @@ class Manager:
         SearchID = record['ID']
         if SearchID in self.data["ID"].values:
             self.data.drop(self.data[self.data["ID"] == SearchID].index, inplace=True)
-            self.data.to_csv(self.path, index=False)
+            self.SaveData()
         else:
             print("No se encontro el registro a eliminar")
 
@@ -46,8 +64,7 @@ class Manager:
         resultado = self.data[filtro]
 
         return resultado if not resultado.empty else "No se encontraron coincidencias."
-
-
+    
     def Show(self):
         print(self.data)
 
@@ -62,7 +79,7 @@ class LoginManager(Manager):
         Parameters = {"Username": input("Username: "),
                        "Password": input("Password: ")}
         resultado = self.SearchRecord(Parameters)
-        return resultado.empty()
+        return not resultado.empty
     
     def SignIn(self, User):
         self.AddRecord(User)
