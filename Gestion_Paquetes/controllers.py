@@ -7,7 +7,6 @@ class Manager:
         self.name = name
         self.path = "./data/" + self.name + ".csv"  
         self.data = self.Data()
-        self.n_elements = self.Data['ID'].index()
 
     def Data(self): 
         if os.path.exists(self.path):
@@ -81,7 +80,8 @@ class LoginManager(Manager):
         resultado = self.SearchRecord(Parameters)
         return not resultado.empty
     
-    def SignIn(self, User):
+    def SignIn(self):
+        User = User(self.IDGenerator())
         self.AddRecord(User)
 
 class PaymentsManager(Manager):
