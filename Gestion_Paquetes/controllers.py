@@ -87,9 +87,12 @@ class LoginManager(Manager):
         email = input("Email: ")
         address = input("Address: ")
         permissions = input("Permissions: ")
-
-        user = User(ID,username, password,email,address,permissions)
-        self.AddRecord(user)
+        parameters = {"username":username,"password":password}
+        if self.SearchRecord(parameters).empty:
+            user = User(ID,username, password,email,address,permissions)
+            self.AddRecord(user)
+        else:
+            print("El usuario ya existe")
 
 class PaymentsManager(Manager):
     def __init__(self):
