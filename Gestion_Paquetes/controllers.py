@@ -70,29 +70,70 @@ class Manager:
 class LoginManager(Manager):
     def __init__(self):
         super().__init__("Users")
-        self.data = None
-        self.Verify = ["Username","Password"]
-        self.Data()
+        self.prefix = "U"  # Prefijo para generar IDs de usuarios
+        self.required_fields = ["Username", "Password"]  # Campos requeridos para el login
+        self.Data()  # Cargar datos al inicializar
 
     def Login(self):
-        Parameters = {"Username": input("Username: "),
-                       "Password": input("Password: ")}
-        resultado = self.SearchRecord(Parameters)
-        return not resultado.empty
-    
+        """
+        Método para autenticar a un usuario.
+        Solicita el nombre de usuario y la contraseña, y verifica si coinciden con un usuario registrado.
+        """
+        username = input("Username: ").strip()
+        password = input("Password: ").strip()
+
+        if not username or not password:
+            print("Error: El nombre de usuario y la contraseña no pueden estar vacíos.")
+            return False
+
+        # Buscar el usuario en los registros
+        user = self.SearchRecord({"Username": username, "Password": password})
+        if user.empty:
+            print("Error: Usuario o contraseña incorrectos.")
+            return False
+
+        print(f"Bienvenido, {username}!")
+        return True
+
     def SignIn(self):
-        ID = self.IDGenerator()
-        username = input("Username: ")
-        password = input("Password: ")
-        email = input("Email: ")
-        address = input("Address: ")
-        permissions = input("Permissions: ")
-        parameters = {"username":username,"password":password}
-        if self.SearchRecord(parameters).empty:
-            user = User(ID,username, password,email,address,permissions)
-            self.AddRecord(user)
-        else:
-            print("El usuario ya existe")
+        """
+        Método para registrar un nuevo usuario.
+        Solicita los datos del usuario y lo registra en el sistema si no existe.
+        """
+        print("Registro de nuevo usuario:")
+        username = input("Username: ").strip()
+        password = input("Password: ").strip()
+        email = input("Email: ").strip()
+        address = input("Address: ").strip()
+        permissions = input("Permissions: ").strip()
+
+        # Validar que los campos obligatorios no estén vacíos
+        if not username or not password:
+            print("Error: El nombre de usuario y la contraseña son obligatorios.")
+            return
+
+        # Verificar si el usuario ya existe
+        if not self.SearchRecord({"Username": username}).empty:
+            print("Error: El nombre de usuario ya está en uso.")
+            return
+
+        # Generar un ID único para el nuevo usuario
+        user_id = self.IDGenerator()
+
+        # Crear el nuevo usuario y agregarlo al sistema
+        new_user = User(user_id, username, password, email, address, permissions)
+        self.AddRecord(new_user.__dict__)
+        print(f"Usuario {username} registrado con éxito.")
+
+    def ValidateInput(self, input_data):
+        """
+        Método para validar que los datos de entrada no estén vacíos.
+        """
+        for key, value in input_data.items():
+            if not value:
+                print(f"Error: El campo {key} no puede estar vacío.")
+                return False
+        return True
 
 class PaymentsManager(Manager):
     def __init__(self):
