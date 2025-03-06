@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from models import Package,User,Shipment,Invoice
 class Manager:
     def __init__(self, name):
         self.name = name
@@ -51,9 +52,18 @@ class Manager:
         print(self.data)
 
 class LoginManager(Manager):
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+    def __init__(self):
+        super.__init__("Users")
+        self.data = None
+
+    def Login(self):
+        Parameters = {"Username": input("Username: "),
+                       "Password": input("Password: ")}
+        resultado = self.SearchRecord(Parameters)
+        return resultado.empty()
+    
+    def SignIn(self, User):
+        self.AddRecord(User)
 
 class PaymentsManager(Manager):
     def __init__(self, envio, monto):
