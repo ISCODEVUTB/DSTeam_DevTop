@@ -2,24 +2,39 @@ import pandas as pd
 import os
 import re
 from models import Package,User,Shipment,Invoice
+
 class Manager:
     def __init__(self, name):
+        """
+        Inicializa el Manager con un nombre de archivo CSV.
+        """
         self.name = name
-        self.path = "./data/" + self.name + ".csv"  
-        self.data = self.Data()
+        self.path = f"./data/{self.name}.csv"
+        self.data = self.load_data()
 
-    def Data(self): 
+    def load_data(self):
+        """
+        Carga los datos desde el archivo CSV.
+        Si el archivo no existe, devuelve un DataFrame vacío.
+        """
         if os.path.exists(self.path):
             return pd.read_csv(self.path)
         else:
-            print("Data no encontrada")
-            return None 
-        
-    def SaveData(self):
-        self.data.to_csv(self.path, index=False)
-        print("Datos agregados con exito")
+            print(f"Advertencia: No se encontró el archivo {self.path}.")
+            return pd.DataFrame()
 
-    def IDGenerator(self):
+    def save_data(self):
+        """
+        Guarda los datos en el archivo CSV.
+        """
+        self.data.to_csv(self.path, index=False)
+        print("Datos guardados con éxito.")
+
+    def id_generator(self):
+        """
+        Genera un ID único basado en los IDs existentes en el DataFrame.
+        El formato del ID es: prefijo + número (ejemplo: U0001, P0001).
+        """
         if not self.data.empty and "ID" in self.data.columns:
             # Extraer números de los IDs existentes y encontrar el siguiente número
             existing_ids = self.data["ID"].dropna().astype(str)
@@ -30,108 +45,109 @@ class Manager:
 
         return f"{self.prefix}{next_number:04d}"  # Formato tipo U0001, P0001, etc.
 
-    def AddRecord(self, record):
-        NewRecord = pd.DataFrame([record], columns = record.keys())
-        self.data = pd.concat([self.data, NewRecord], ignore_index=True)
-        self.SaveData()
+    def add_record(self, record):
+        """
+        Agrega un nuevo registro al DataFrame y guarda los datos.
+        """
+        new_record = pd.DataFrame([record], columns=record.keys())
+        self.data = pd.concat([self.data, new_record], ignore_index=True)
+        self.save_data()
 
-    def EditRecord(self,record):
-        SearchID = record['ID']
-        if SearchID in self.data["ID"].values:
-            self.data.loc[self.data["ID"] == SearchID] = record
-            self.SaveData()
+    def edit_record(self, record):
+        """
+        Edita un registro existente en el DataFrame y guarda los datos.
+        """
+        search_id = record['ID']
+        if search_id in self.data["ID"].values:
+            self.data.loc[self.data["ID"] == search_id] = record
+            self.save_data()
         else:
-            print("No se encontro el registro a editar")
+            print(f"Error: No se encontró el registro con ID {search_id}.")
 
-    def DeletedRecord(self,record):
-        SearchID = record['ID']
-        if SearchID in self.data["ID"].values:
-            self.data.drop(self.data[self.data["ID"] == SearchID].index, inplace=True)
-            self.SaveData()
+    def delete_record(self, record):
+        """
+        Elimina un registro del DataFrame y guarda los datos.
+        """
+        search_id = record['ID']
+        if search_id in self.data["ID"].values:
+            self.data.drop(self.data[self.data["ID"] == search_id].index, inplace=True)
+            self.save_data()
         else:
-            print("No se encontro el registro a eliminar")
+            print(f"Error: No se encontró el registro con ID {search_id}.")
 
-    def SearchRecord(self,parameters):
+    def search_record(self, parameters):
+        """
+        Busca registros en el DataFrame basados en los parámetros proporcionados.
+        """
         filtro = pd.Series(True, index=self.data.index)
 
         for columna, valor in parameters.items():
-            if columna in self.data.columns:  
-                filtro &= self.data[columna] == valor  
+            if columna in self.data.columns:
+                filtro &= self.data[columna] == valor
             else:
                 print(f"Advertencia: La columna '{columna}' no existe en el DataFrame.")
 
         resultado = self.data[filtro]
 
         return resultado if not resultado.empty else "No se encontraron coincidencias."
-    
-    def Show(self):
+
+    def show(self):
+        """
+        Muestra el contenido actual del DataFrame.
+        """
         print(self.data)
 
 class LoginManager(Manager):
     def __init__(self):
         super().__init__("Users")
         self.prefix = "U"  # Prefijo para generar IDs de usuarios
-        self.required_fields = ["Username", "Password"]  # Campos requeridos para el login
-        self.Data()  # Cargar datos al inicializar
 
-    def Login(self):
+    def login(self, username, password):
         """
-        Método para autenticar a un usuario.
-        Solicita el nombre de usuario y la contraseña, y verifica si coinciden con un usuario registrado.
+        Autentica a un usuario en el sistema.
         """
-        username = input("Username: ").strip()
-        password = input("Password: ").strip()
-
-        if not username or not password:
+        # Validar que los campos no estén vacíos
+        if not self._validate_input(username, password):
             print("Error: El nombre de usuario y la contraseña no pueden estar vacíos.")
             return False
 
         # Buscar el usuario en los registros
-        user = self.SearchRecord({"Username": username, "Password": password})
-        if user.empty:
+        user = self.search_record({"Username": username, "Password": password})
+        if not user.empty:
+            print(f"Bienvenido, {username}!")
+            return True
+        else:
             print("Error: Usuario o contraseña incorrectos.")
             return False
 
-        print(f"Bienvenido, {username}!")
-        return True
-
-    def SignIn(self):
+    def sign_in(self, username, password, name, email, address, permissions):
         """
-        Método para registrar un nuevo usuario.
-        Solicita los datos del usuario y lo registra en el sistema si no existe.
+        Registra un nuevo usuario en el sistema.
         """
-        print("Registro de nuevo usuario:")
-        username = input("Username: ").strip()
-        password = input("Password: ").strip()
-        email = input("Email: ").strip()
-        address = input("Address: ").strip()
-        permissions = input("Permissions: ").strip()
-
         # Validar que los campos obligatorios no estén vacíos
-        if not username or not password:
-            print("Error: El nombre de usuario y la contraseña son obligatorios.")
+        if not self._validate_input(username, password, name, email):
+            print("Error: Todos los campos obligatorios deben ser completados.")
             return
 
         # Verificar si el usuario ya existe
-        if not self.SearchRecord({"Username": username}).empty:
+        if not self.search_record({"Username": username}).empty:
             print("Error: El nombre de usuario ya está en uso.")
             return
 
         # Generar un ID único para el nuevo usuario
-        user_id = self.IDGenerator()
+        user_id = self.id_generator()
 
         # Crear el nuevo usuario y agregarlo al sistema
-        new_user = User(user_id, username, password, email, address, permissions)
-        self.AddRecord(new_user.__dict__)
+        new_user = User(user_id, username, password, name, email, address, permissions)
+        self.add_record(new_user.__dict__)
         print(f"Usuario {username} registrado con éxito.")
 
-    def ValidateInput(self, input_data):
+    def _validate_input(self, *args):
         """
-        Método para validar que los datos de entrada no estén vacíos.
+        Valida que los campos de entrada no estén vacíos.
         """
-        for key, value in input_data.items():
-            if not value:
-                print(f"Error: El campo {key} no puede estar vacío.")
+        for arg in args:
+            if not arg or str(arg).strip() == "":
                 return False
         return True
 
@@ -152,75 +168,99 @@ class ShipmentManager(Manager):
         super().__init__("Shipments")
         self.prefix = "S"  # Prefijo para generar IDs de envíos
 
-    def CreateShipment(self):
-        shipment_id = self.IDGenerator()
-        package_id = input("ID del paquete: ")
-        recipient_name = input("Nombre del destinatario: ")
-        recipient_address = input("Dirección del destinatario: ")
-        status = "Recolectado"  # Estado inicial del envío
-        
-        shipment = Shipment(shipment_id, package_id, recipient_name, recipient_address, status)
-        self.AddRecord(shipment.__dict__)
+    def create_shipment(self, user_id, package_id, cost, date, state):
+        """
+        Crea un nuevo envío en el sistema.
+        """
+        shipment_id = self.id_generator()
+        new_shipment = Shipment(shipment_id, user_id, package_id, cost, date, state)
+        self.add_record(new_shipment.__dict__)
+        print(f"Envío {shipment_id} creado con éxito.")
 
-    def UpdateShipmentStatus(self):
-        shipment_id = input("ID del envío a actualizar: ")
-        new_status = input("Nuevo estado (Recolectado, En tránsito, Entregado): ")
-        
-        shipment = self.SearchRecord({"ID": shipment_id})
+    def update_shipment_state(self, shipment_id, new_state):
+        """
+        Actualiza el estado de un envío existente.
+        """
+        shipment = self.search_record({"ID": shipment_id})
         if not shipment.empty:
-            shipment["Status"] = new_status
-            self.EditRecord(shipment.iloc[0].to_dict())
+            shipment["State"] = new_state
+            self.edit_record(shipment.iloc[0].to_dict())
+            print(f"Estado del envío {shipment_id} actualizado a {new_state}.")
         else:
-            print("Envío no encontrado.")
+            print(f"Error: No se encontró el envío con ID {shipment_id}.")
 
-    def SearchShipment(self):
-        search_criteria = {
-            "ID": input("ID del envío: "),
-            "PackageID": input("ID del paquete: "),
-            "RecipientName": input("Nombre del destinatario: "),
-            "Status": input("Estado del envío: ")
-        }
-        result = self.SearchRecord(search_criteria)
-        print(result)
+    def delete_shipment(self, shipment_id):
+        """
+        Elimina un envío del sistema.
+        """
+        shipment = self.search_record({"ID": shipment_id})
+        if not shipment.empty:
+            self.delete_record(shipment.iloc[0].to_dict())
+            print(f"Envío {shipment_id} eliminado con éxito.")
+        else:
+            print(f"Error: No se encontró el envío con ID {shipment_id}.")
+
+    def search_shipment(self, search_criteria):
+        """
+        Busca envíos basados en criterios específicos.
+        """
+        result = self.search_record(search_criteria)
+        if not result.empty:
+            print(result)
+        else:
+            print("No se encontraron coincidencias.")
 
 class PackageManager(Manager):
     def __init__(self):
         super().__init__("Packages")
         self.prefix = "P"  # Prefijo para generar IDs de paquetes
 
-    def AddPackage(self):
-        ID = self.IDGenerator()
-        dimensions = input("Dimensiones: ")
-        weight = input("Peso: ")
-        package_type = input("Tipo de paquete (básico, estándar, dimensionado): ")
-        
-        package = Package(ID, dimensions, weight, package_type)
-        self.AddRecord(package.__dict__)
+    def add_package(self, name, weight, destination):
+        """
+        Registra un nuevo paquete en el sistema.
+        """
+        package_id = self.id_generator()
+        new_package = Package(package_id, name, weight, destination)
+        self.add_record(new_package.__dict__)
+        print(f"Paquete {package_id} registrado con éxito.")
 
-    def EditPackage(self):
-        package_id = input("ID del paquete a editar: ")
-        dimensions = input("Nuevas dimensiones: ")
-        weight = input("Nuevo peso: ")
-        package_type = input("Nuevo tipo de paquete (básico, estándar, dimensionado): ")
-        
-        package = Package(package_id, dimensions, weight, package_type)
-        self.EditRecord(package.__dict__)
+    def update_package(self, package_id, name=None, weight=None, destination=None):
+        """
+        Actualiza los datos de un paquete existente.
+        """
+        package = self.search_record({"ID": package_id})
+        if not package.empty:
+            if name is not None:
+                package["Name"] = name
+            if weight is not None:
+                package["Weight"] = weight
+            if destination is not None:
+                package["Destination"] = destination
+            self.edit_record(package.iloc[0].to_dict())
+            print(f"Paquete {package_id} actualizado con éxito.")
+        else:
+            print(f"Error: No se encontró el paquete con ID {package_id}.")
 
-    def DeletePackage(self):
-        package_id = input("ID del paquete a eliminar: ")
-        package = Package(package_id, None, None, None)
-        self.DeletedRecord(package.__dict__)
+    def delete_package(self, package_id):
+        """
+        Elimina un paquete del sistema.
+        """
+        package = self.search_record({"ID": package_id})
+        if not package.empty:
+            self.delete_record(package.iloc[0].to_dict())
+            print(f"Paquete {package_id} eliminado con éxito.")
+        else:
+            print(f"Error: No se encontró el paquete con ID {package_id}.")
 
-    def SearchPackage(self):
-        search_criteria = {
-            "ID": input("ID del paquete: "),
-            "Dimensions": input("Dimensiones: "),
-            "Weight": input("Peso: "),
-            "Type": input("Tipo de paquete: ")
-        }
-        result = self.SearchRecord(search_criteria)
-        print(result)
-
+    def search_package(self, search_criteria):
+        """
+        Busca paquetes basados en criterios específicos.
+        """
+        result = self.search_record(search_criteria)
+        if not result.empty:
+            print(result)
+        else:
+            print("No se encontraron coincidencias.")
     class InvoiceManager(Manager):
         def __init__(self):
             super().__init__("Invoices")
@@ -244,3 +284,103 @@ class PackageManager(Manager):
             }
             result = self.SearchRecord(search_criteria)
             print(result)
+
+class InvoiceManager(Manager):
+    def __init__(self):
+        super().__init__("Invoices")
+        self.prefix = "I"  # Prefijo para generar IDs de facturas
+
+    def generate_invoice(self, user_id, shipment_id, cost, date):
+        """
+        Genera una nueva factura en el sistema.
+        """
+        invoice_id = self.id_generator()
+        new_invoice = Invoice(invoice_id, user_id, shipment_id, cost, date)
+        self.add_record(new_invoice.__dict__)
+        print(f"Factura {invoice_id} generada con éxito.")
+
+    def update_invoice(self, invoice_id, cost=None, date=None):
+        """
+        Actualiza los datos de una factura existente.
+        """
+        invoice = self.search_record({"ID": invoice_id})
+        if not invoice.empty:
+            if cost is not None:
+                invoice["Cost"] = cost
+            if date is not None:
+                invoice["Date"] = date
+            self.edit_record(invoice.iloc[0].to_dict())
+            print(f"Factura {invoice_id} actualizada con éxito.")
+        else:
+            print(f"Error: No se encontró la factura con ID {invoice_id}.")
+
+    def delete_invoice(self, invoice_id):
+        """
+        Elimina una factura del sistema.
+        """
+        invoice = self.search_record({"ID": invoice_id})
+        if not invoice.empty:
+            self.delete_record(invoice.iloc[0].to_dict())
+            print(f"Factura {invoice_id} eliminada con éxito.")
+        else:
+            print(f"Error: No se encontró la factura con ID {invoice_id}.")
+
+    def search_invoice(self, search_criteria):
+        """
+        Busca facturas basadas en criterios específicos.
+        """
+        result = self.search_record(search_criteria)
+        if not result.empty:
+            print(result)
+        else:
+            print("No se encontraron coincidencias.")
+
+class UserManager(Manager):
+    def __init__(self):
+        super().__init__("Users")
+        self.prefix = "U"  # Prefijo para generar IDs de usuarios
+
+    def update_user(self, user_id, username=None, password=None, name=None,
+                    email=None, address=None, permissions=None):
+        """
+        Actualiza los datos de un usuario existente.
+        """
+        user = self.search_record({"ID": user_id})
+        if not user.empty:
+            if username is not None:
+                user["Username"] = username
+            if password is not None:
+                user["Password"] = password
+            if name is not None:
+                user["Name"] = name
+            if email is not None:
+                user["Email"] = email
+            if address is not None:
+                user["Address"] = address
+            if permissions is not None:
+                user["Permissions"] = permissions
+            self.edit_record(user.iloc[0].to_dict())
+            print(f"Usuario {user_id} actualizado con éxito.")
+        else:
+            print(f"Error: No se encontró el usuario con ID {user_id}.")
+
+    def delete_user(self, user_id):
+        """
+        Elimina un usuario del sistema.
+        """
+        user = self.search_record({"ID": user_id})
+        if not user.empty:
+            self.delete_record(user.iloc[0].to_dict())
+            print(f"Usuario {user_id} eliminado con éxito.")
+        else:
+            print(f"Error: No se encontró el usuario con ID {user_id}.")
+
+    def search_user(self, search_criteria):
+        """
+        Busca usuarios basados en criterios específicos.
+        """
+        result = self.search_record(search_criteria)
+        if not result.empty:
+            print(result)
+        else:
+            print("No se encontraron coincidencias.")    
