@@ -55,6 +55,8 @@ class LoginManager(Manager):
     def __init__(self):
         super.__init__("Users")
         self.data = None
+        self.Verify = ["Username","Password"]
+        self.Data()
 
     def Login(self):
         Parameters = {"Username": input("Username: "),
@@ -66,6 +68,25 @@ class LoginManager(Manager):
         self.AddRecord(User)
 
 class PaymentsManager(Manager):
-    def __init__(self, envio, monto):
-        self.envio = envio
-        self.monto = monto   
+    def __init__(self):
+        super.__init__("Payments")
+        self.data = None
+        self.Data()
+    
+    def AddPayment(self, payment):
+        self.AddRecord(payment)
+    
+    def ShowPayments(self):
+        self.Show()
+
+class ShipmentsManager(Manager):
+    def __init__(self):
+        super().__init__("Shipments")
+        self.data = None
+        self.Data()
+
+class PackagesManager(Manager):
+    def __init__(self):
+        super().__init__("Packages")
+        self.data = None
+        self.Data()
