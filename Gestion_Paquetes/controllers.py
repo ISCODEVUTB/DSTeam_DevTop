@@ -20,7 +20,7 @@ class Manager:
 
     def EditRecord(self,record):
         SearchID = record['ID']
-        for SearchID in self.data["ID"].values:
+        if SearchID in self.data["ID"].values:
             self.data.loc[self.data["ID"] == SearchID] = record
             self.data.to_csv(self.path, index=False)
         else:
@@ -28,7 +28,7 @@ class Manager:
 
     def DeletedRecord(self,record):
         SearchID = record['ID']
-        for SearchID in self.data["ID"].values:
+        if SearchID in self.data["ID"].values:
             self.data.drop(self.data[self.data["ID"] == SearchID].index, inplace=True)
             self.data.to_csv(self.path, index=False)
         else:
@@ -53,7 +53,7 @@ class Manager:
 
 class LoginManager(Manager):
     def __init__(self):
-        super.__init__("Users")
+        super().__init__("Users")
         self.data = None
         self.Verify = ["Username","Password"]
         self.Data()
@@ -69,7 +69,7 @@ class LoginManager(Manager):
 
 class PaymentsManager(Manager):
     def __init__(self):
-        super.__init__("Payments")
+        super().__init__("Payments")
         self.data = None
         self.Data()
     
