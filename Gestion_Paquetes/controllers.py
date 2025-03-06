@@ -106,14 +106,100 @@ class PaymentsManager(Manager):
     def ShowPayments(self):
         self.Show()
 
-class ShipmentsManager(Manager):
+class ShipmentManager(Manager):
     def __init__(self):
         super().__init__("Shipments")
-        self.data = None
-        self.Data()
+        self.prefix = "S"  # Prefijo para generar IDs de envíos
 
-class PackagesManager(Manager):
+    def CreateShipment(self):
+        shipment_id = self.IDGenerator()
+        package_id = input("ID del paquete: ")
+        recipient_name = input("Nombre del destinatario: ")
+        recipient_address = input("Dirección del destinatario: ")
+        status = "Recolectado"  # Estado inicial del envío
+        
+        shipment = Shipment(shipment_id, package_id, recipient_name, recipient_address, status)
+        self.AddRecord(shipment.__dict__)
+
+    def UpdateShipmentStatus(self):
+        shipment_id = input("ID del envío a actualizar: ")
+        new_status = input("Nuevo estado (Recolectado, En tránsito, Entregado): ")
+        
+        shipment = self.SearchRecord({"ID": shipment_id})
+        if not shipment.empty:
+            shipment["Status"] = new_status
+            self.EditRecord(shipment.iloc[0].to_dict())
+        else:
+            print("Envío no encontrado.")
+
+    def SearchShipment(self):
+        search_criteria = {
+            "ID": input("ID del envío: "),
+            "PackageID": input("ID del paquete: "),
+            "RecipientName": input("Nombre del destinatario: "),
+            "Status": input("Estado del envío: ")
+        }
+        result = self.SearchRecord(search_criteria)
+        print(result)
+
+class PackageManager(Manager):
     def __init__(self):
         super().__init__("Packages")
-        self.data = None
-        self.Data()
+        self.prefix = "P"  # Prefijo para generar IDs de paquetes
+
+    def AddPackage(self):
+        ID = self.IDGenerator()
+        dimensions = input("Dimensiones: ")
+        weight = input("Peso: ")
+        package_type = input("Tipo de paquete (básico, estándar, dimensionado): ")
+        
+        package = Package(ID, dimensions, weight, package_type)
+        self.AddRecord(package.__dict__)
+
+    def EditPackage(self):
+        package_id = input("ID del paquete a editar: ")
+        dimensions = input("Nuevas dimensiones: ")
+        weight = input("Nuevo peso: ")
+        package_type = input("Nuevo tipo de paquete (básico, estándar, dimensionado): ")
+        
+        package = Package(package_id, dimensions, weight, package_type)
+        self.EditRecord(package.__dict__)
+
+    def DeletePackage(self):
+        package_id = input("ID del paquete a eliminar: ")
+        package = Package(package_id, None, None, None)
+        self.DeletedRecord(package.__dict__)
+
+    def SearchPackage(self):
+        search_criteria = {
+            "ID": input("ID del paquete: "),
+            "Dimensions": input("Dimensiones: "),
+            "Weight": input("Peso: "),
+            "Type": input("Tipo de paquete: ")
+        }
+        result = self.SearchRecord(search_criteria)
+        print(result)
+
+    class InvoiceManager(Manager):
+        def __init__(self):
+            super().__init__("Invoices")
+            self.prefix = "I"  # Prefijo para generar IDs de facturas
+
+        def GenerateInvoice(self):
+            invoice_id = self.IDGenerator()
+            shipment_id = input("ID del envío: ")
+            payment_method = input("Método de pago (Tarjeta, PayPal, etc.): ")
+            amount = input("Monto a pagar: ")
+            
+            invoice = Invoice(invoice_id, shipment_id, payment_method, amount)
+            self.AddRecord(invoice.__dict__)
+
+        def SearchInvoice(self):
+            search_criteria = {
+                "ID": input("ID de la factura: "),
+                "ShipmentID": input("ID del envío: "),
+                "PaymentMethod": input("Método de pago: "),
+                "Amount": input("Monto: ")
+            }
+            result = self.SearchRecord(search_criteria)
+            print(result)
