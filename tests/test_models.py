@@ -8,7 +8,7 @@ def test_package_creation():
     package = Package("P0001", "Laptop", 2.5, "Bogota")
     assert package.package_id == "P0001"
     assert package.name == "Laptop"
-    assert math.isclose(a, b - 0.1, rel_tol=1e-09, abs_tol=1e-09)
+    assert math.isclose(package.weight, 2.5, rel_tol=1e-09, abs_tol=1e-09)
     assert package.destination == "Bogota"
     assert str(package) == "Package P0001: Laptop, 2.5 kg, Bogota"
 

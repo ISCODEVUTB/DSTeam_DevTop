@@ -1,8 +1,9 @@
 import pandas as pd
 import os
-import re
 from models import Package,User,Shipment,Invoice
+from utils import validate_input, generate_id
 
+NO_FOUND = "NO_FOUND"
 class Manager:
     def __init__(self, name):
         """
@@ -33,17 +34,9 @@ class Manager:
     def id_generator(self):
         """
         Genera un ID único basado en los IDs existentes en el DataFrame.
-        El formato del ID es: prefijo + número (ejemplo: U0001, P0001).
         """
-        if not self.data.empty and "ID" in self.data.columns:
-            # Extraer números de los IDs existentes y encontrar el siguiente número
-            existing_ids = self.data["ID"].dropna().astype(str)
-            numbers = [int(re.search(r'\d+', id).group()) for id in existing_ids if re.search(r'\d+', id)]
-            next_number = max(numbers) + 1 if numbers else 1
-        else:
-            next_number = 1  # Si no hay registros, empezar desde 1
-
-        return f"{self.prefix}{next_number:04d}"  # Formato tipo U0001, P0001, etc.
+        existing_ids = self.data["ID"].dropna().astype(str)
+        return generate_id(self.prefix, existing_ids)
 
     def add_record(self, record):
         """
@@ -89,7 +82,7 @@ class Manager:
 
         resultado = self.data[filtro]
 
-        return resultado if not resultado.empty else "No se encontraron coincidencias."
+        return resultado if not resultado.empty else print(NO_FOUND)
 
     def show(self):
         """
@@ -106,8 +99,7 @@ class LoginManager(Manager):
         """
         Autentica a un usuario en el sistema.
         """
-        # Validar que los campos no estén vacíos
-        if not self._validate_input(username, password):
+        if not validate_input(username, password):
             print("Error: El nombre de usuario y la contraseña no pueden estar vacíos.")
             return False
 
@@ -124,8 +116,7 @@ class LoginManager(Manager):
         """
         Registra un nuevo usuario en el sistema.
         """
-        # Validar que los campos obligatorios no estén vacíos
-        if not self._validate_input(username, password, name, email):
+        if not validate_input(username, password, name, email):
             print("Error: Todos los campos obligatorios deben ser completados.")
             return
 
@@ -142,20 +133,11 @@ class LoginManager(Manager):
         self.add_record(new_user.__dict__)
         print(f"Usuario {username} registrado con éxito.")
 
-    def _validate_input(self, *args):
-        """
-        Valida que los campos de entrada no estén vacíos.
-        """
-        for arg in args:
-            if not arg or str(arg).strip() == "":
-                return False
-        return True
-
 class PaymentsManager(Manager):
     def __init__(self):
         super().__init__("Payments")
         self.data = None
-        self.Data()
+        self.save_data()
     
     def AddPayment(self, payment):
         self.AddRecord(payment)
@@ -208,23 +190,23 @@ class ShipmentManager(Manager):
         if not result.empty:
             print(result)
         else:
-            print("No se encontraron coincidencias.")
+            print(NO_FOUND)
 
 class PackageManager(Manager):
     def __init__(self):
         super().__init__("Packages")
         self.prefix = "P"  # Prefijo para generar IDs de paquetes
 
-    def add_package(self, name, weight, destination):
+    def add_package(self, name, weight, type):
         """
         Registra un nuevo paquete en el sistema.
         """
         package_id = self.id_generator()
-        new_package = Package(package_id, name, weight, destination)
+        new_package = Package(package_id, name, weight, type)
         self.add_record(new_package.__dict__)
         print(f"Paquete {package_id} registrado con éxito.")
 
-    def update_package(self, package_id, name=None, weight=None, destination=None):
+    def update_package(self, package_id, name=None, weight=None, type=None):
         """
         Actualiza los datos de un paquete existente.
         """
@@ -234,8 +216,8 @@ class PackageManager(Manager):
                 package["Name"] = name
             if weight is not None:
                 package["Weight"] = weight
-            if destination is not None:
-                package["Destination"] = destination
+            if type is not None:
+                package["Type"] = type
             self.edit_record(package.iloc[0].to_dict())
             print(f"Paquete {package_id} actualizado con éxito.")
         else:
@@ -260,7 +242,7 @@ class PackageManager(Manager):
         if not result.empty:
             print(result)
         else:
-            print("No se encontraron coincidencias.")
+            print("NO_FOUND")
     class InvoiceManager(Manager):
         def __init__(self):
             super().__init__("Invoices")
@@ -333,7 +315,7 @@ class InvoiceManager(Manager):
         if not result.empty:
             print(result)
         else:
-            print("No se encontraron coincidencias.")
+            print("NO_FOUND")
 
 class UserManager(Manager):
     def __init__(self):
@@ -383,4 +365,4 @@ class UserManager(Manager):
         if not result.empty:
             print(result)
         else:
-            print("No se encontraron coincidencias.")    
+            print("NO_FOUND")
