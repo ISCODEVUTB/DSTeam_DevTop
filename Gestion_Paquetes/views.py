@@ -42,12 +42,16 @@ class LoginMenu(Menu):
     def login(self):
         print("Logueando...")
         lm = LoginManager()
-        lm.login()
+        username = input("Ingrese su nombre de usuario: ")
+        password = input("Ingrese su contraseña: ")
+        lm.login(username, password)
 
     def register(self):
         print("Registrando...")
         lm = LoginManager()
-        lm.sign_in()
+        username = input("Ingrese su nombre de usuario: ")
+        password = input("Ingrese su contraseña: ")
+        lm.sign_in(username, password)
 
     def leave(self):
         print("Saliendo del sistema...")
