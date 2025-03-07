@@ -1,5 +1,5 @@
 import pytest
-from main import Package, User, Shipment, Invoice
+from models import Package, User, Shipment, Invoice
 from datetime import date
 
 # Pruebas para la clase Package
