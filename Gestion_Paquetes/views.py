@@ -51,7 +51,11 @@ class LoginMenu(Menu):
         lm = LoginManager()
         username = input("Ingrese su nombre de usuario: ")
         password = input("Ingrese su contraseña: ")
-        lm.sign_in(username, password)
+        name = input("Ingrese su nombre: ")
+        email = input("Ingrese su correo electrónico: ")
+        address = input("Ingrese su dirección: ")
+        permission = input("Ingrese su permiso (admin/user): ")
+        lm.sign_in(username, password, name, email, address, permission)
 
     def leave(self):
         print("Saliendo del sistema...")
