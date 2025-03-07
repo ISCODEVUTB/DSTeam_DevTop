@@ -101,14 +101,6 @@ class LoginManager(Manager):
     def __init__(self):
         super().__init__("Users")
         self.prefix = "U"  # Prefijo para generar IDs de usuarios
-        self._initialize_data()
-
-    def _initialize_data(self):
-        """
-        Inicializa el DataFrame con las columnas necesarias si está vacío.
-        """
-        if self.data.empty:
-            self.data = pd.DataFrame(columns=["ID", "Username", "Password", "Name", "Email", "Address", "Permissions"])
 
     def login(self, username, password):
         """
@@ -391,4 +383,4 @@ class UserManager(Manager):
         if not result.empty:
             print(result)
         else:
-            print("No se encontraron coincidencias.")
+            print("No se encontraron coincidencias.")    
