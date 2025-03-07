@@ -170,7 +170,16 @@ class InvoicesMenu(Menu):
 
     def generate_invoice(self):
         print("Generando factura...")
-        
+        im = PaymentsManager()
+        # Implementación de la generación de factura
+        invoice_data = {
+            "ID": input("Ingrese el ID de la factura: "),
+            "Cliente": input("Ingrese el nombre del cliente: "),
+            "Monto": input("Ingrese el monto de la factura: "),
+            "Fecha": input("Ingrese la fecha de la factura: ")
+        }
+        im.create_invoice(invoice_data)
+        print("Factura generada.")
 
     def delete_invoice(self):
         print("Eliminando factura...")
