@@ -181,5 +181,6 @@ class RegisterMenu(Menu):
         self.add_option("1", "Ingresar usuario", self.username)
         self.add_option("2", "Ingresar contraseña", self.password)
 
-main_menu = MainMenu()  # Renamed instance to avoid conflict
-main_menu.run()
+if __name__ == "__main__":
+    main_menu = MainMenu()  # Renamed instance to avoid conflict
+    main_menu.run()  # Renamed method to avoid conflict
