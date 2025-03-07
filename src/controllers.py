@@ -1,7 +1,7 @@
 import pandas as pd
 import os
-import re
 from models import Package,User,Shipment,Invoice
+from utils import validate_input, generate_id
 
 class Manager:
     def __init__(self, name):
@@ -33,17 +33,9 @@ class Manager:
     def id_generator(self):
         """
         Genera un ID único basado en los IDs existentes en el DataFrame.
-        El formato del ID es: prefijo + número (ejemplo: U0001, P0001).
         """
-        if not self.data.empty and "ID" in self.data.columns:
-            # Extraer números de los IDs existentes y encontrar el siguiente número
-            existing_ids = self.data["ID"].dropna().astype(str)
-            numbers = [int(re.search(r'\d+', id).group()) for id in existing_ids if re.search(r'\d+', id)]
-            next_number = max(numbers) + 1 if numbers else 1
-        else:
-            next_number = 1  # Si no hay registros, empezar desde 1
-
-        return f"{self.prefix}{next_number:04d}"  # Formato tipo U0001, P0001, etc.
+        existing_ids = self.data["ID"].dropna().astype(str)
+        return generate_id(self.prefix, existing_ids)
 
     def add_record(self, record):
         """
@@ -106,8 +98,7 @@ class LoginManager(Manager):
         """
         Autentica a un usuario en el sistema.
         """
-        # Validar que los campos no estén vacíos
-        if not self._validate_input(username, password):
+        if not validate_input(username, password):
             print("Error: El nombre de usuario y la contraseña no pueden estar vacíos.")
             return False
 
@@ -124,8 +115,7 @@ class LoginManager(Manager):
         """
         Registra un nuevo usuario en el sistema.
         """
-        # Validar que los campos obligatorios no estén vacíos
-        if not self._validate_input(username, password, name, email):
+        if not validate_input(username, password, name, email):
             print("Error: Todos los campos obligatorios deben ser completados.")
             return
 
@@ -141,15 +131,6 @@ class LoginManager(Manager):
         new_user = User(user_id, username, password, name, email, address, permissions)
         self.add_record(new_user.__dict__)
         print(f"Usuario {username} registrado con éxito.")
-
-    def _validate_input(self, *args):
-        """
-        Valida que los campos de entrada no estén vacíos.
-        """
-        for arg in args:
-            if not arg or str(arg).strip() == "":
-                return False
-        return True
 
 class PaymentsManager(Manager):
     def __init__(self):
@@ -383,4 +364,4 @@ class UserManager(Manager):
         if not result.empty:
             print(result)
         else:
-            print("No se encontraron coincidencias.")    
+            print("No se encontraron coincidencias.")
