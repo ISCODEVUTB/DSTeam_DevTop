@@ -1,20 +1,23 @@
+import pandas as pd
+import os
+import re
+from controllers import PackageManager, ShipmentManager, PaymentsManager, LoginManager
+from models import User, Package, Shipment, Invoice
+
+# Clase base para la creación de menús
 class Menu:
-    # Constructor de la clase Menu
     def __init__(self, name):
         self.name = name
         self.options = {}
 
-    # Método para agregar una opción al menú
     def add_option(self, clave, description, funct):
         self.options[clave] = (description, funct)
 
-    # Método para mostrar el menú
     def show(self):
         print(f"\n--- {self.name} ---")
         for clave, (description, _) in self.options.items():
             print(f"{clave}. {description}")
 
-    # Método para ejecutar el menú
     def run(self):
         while True:
             self.show()
@@ -23,12 +26,12 @@ class Menu:
                 print("Saliendo del menú...")
                 break
             if option in self.options:
-                description, funct = self.options[option]
+                _, funct = self.options[option]
                 funct()
             else:
                 print("Opción no válida. Intente de nuevo.")
 
-# Clase para el menú de logueo
+# Menú de logueo
 class LoginMenu(Menu):
     def __init__(self):
         super().__init__("Menú de Logueo")
@@ -36,45 +39,44 @@ class LoginMenu(Menu):
         self.add_option("2", "Registrarse", self.register)
         self.add_option("q", "Salir", self.leave)
 
-    # Método para loguearse
     def login(self):
         print("Logueando...")
-        LoginMenu().run()
+        lm = LoginManager()
+        lm.login()
 
-    # Método para registrarse
     def register(self):
         print("Registrando...")
-        RegisterMenu().run()
+        lm = LoginManager()
+        lm.sign_in()
 
-# Clase para el menú principal
-class MainMenu(Menu):
-    def __init__(self):
-        super().__init__("Menú Principal")
-        self.add_option("1", "Menú de Paquetes", self.MenuPackage)
-        self.add_option("2", "Menú de Envíos", self.MenuShipment)
-        self.add_option("3", "Menú de Facturas", self.InvoicesMenu)
-        self.add_option("q", "Salir", self.leave)
-
-    # Método para ingresar al menú de paquetes
-    def MenuPackage(self):
-        print("Ingresando al menú de paquetes...")
-        MenuPackage().run()
-
-    # Método para ingresar al menú de envíos
-    def MenuShipment(self):
-        print("Ingresando al menú de envíos...")
-        MenuShipment().run()
-
-    # Método para ingresar al menú de facturas
-    def InvoicesMenu(self):
-        print("Ingresando al menú de facturas...")
-        InvoicesMenu().run()
-
-    # Método para salir del sistema
     def leave(self):
         print("Saliendo del sistema...")
 
-# Clase para el menú de paquetes
+# Menú principal del sistema
+class MainMenu(Menu):
+    def __init__(self):
+        super().__init__("Menú Principal")
+        self.add_option("1", "Menú de Paquetes", self.menu_package)
+        self.add_option("2", "Menú de Envíos", self.menu_shipment)
+        self.add_option("3", "Menú de Facturas", self.invoices_menu)
+        self.add_option("q", "Salir", self.leave)
+
+    def menu_package(self):
+        print("Ingresando al menú de paquetes...")
+        MenuPackage().run()
+
+    def menu_shipment(self):
+        print("Ingresando al menú de envíos...")
+        MenuShipment().run()
+
+    def invoices_menu(self):
+        print("Ingresando al menú de facturas...")
+        InvoicesMenu().run()
+
+    def leave(self):
+        print("Saliendo del sistema...")
+
+# Menú para la gestión de paquetes
 class MenuPackage(Menu):
     def __init__(self):
         super().__init__("Menú de Paquetes")
@@ -84,32 +86,31 @@ class MenuPackage(Menu):
         self.add_option("4", "Eliminar paquete", self.delete_package)
         self.add_option("e", "Volver", self.back)
 
-    # Método para mostrar paquetes
     def show_packages(self):
         print("Mostrando paquetes...")
-        # Lógica para mostrar paquetes
+        pm = PackageManager()
+        pm.Show()
 
-    # Método para agregar paquete
     def add_package(self):
         print("Agregando paquete...")
-        # Lógica para agregar paquete
+        pm = PackageManager()
+        pm.AddPackage()
 
-    # Método para modificar paquete
     def modify_package(self):
         print("Modificando paquete...")
-        # Lógica para modificar paquete
+        pm = PackageManager()
+        pm.EditPackage()
 
-    # Método para eliminar paquete
     def delete_package(self):
         print("Eliminando paquete...")
-        # Lógica para eliminar paquete
+        pm = PackageManager()
+        pm.DeletePackage()
 
-    # Método para volver al menú principal
     def back(self):
         print("Volviendo al menú principal...")
-        main_menu.run()
+        MainMenu().run()
 
-# Clase para el menú de envíos
+# Menú para la gestión de envíos
 class MenuShipment(Menu):
     def __init__(self):
         super().__init__("Menú de Envíos")
@@ -119,68 +120,63 @@ class MenuShipment(Menu):
         self.add_option("4", "Eliminar envío", self.delete_shipment)
         self.add_option("e", "Volver", self.back)
 
-    # Método para mostrar envíos
     def show_shipments(self):
         print("Mostrando envíos...")
-        # Lógica para mostrar envíos
+        sm = ShipmentManager()
+        sm.Show()
 
-    # Método para agregar envío
     def add_shipment(self):
         print("Agregando envío...")
-        # Lógica para agregar envío
+        sm = ShipmentManager()
+        sm.CreateShipment()
 
-    # Método para modificar envío
     def modify_shipment(self):
         print("Modificando envío...")
-        # Lógica para modificar envío
+        sm = ShipmentManager()
+        sm.UpdateShipmentStatus()
 
-    # Método para eliminar envío
     def delete_shipment(self):
         print("Eliminando envío...")
-        # Lógica para eliminar envío
+        sm = ShipmentManager()
+        shipment_id = input("Ingrese el ID del envío a eliminar: ")
+        sm.DeletedRecord({"ID": shipment_id})
+        print("Envío eliminado (si el ID fue encontrado).")
 
-    # Método para volver al menú principal
     def back(self):
         print("Volviendo al menú principal...")
-        main_menu.run()
+        MainMenu().run()
 
-# Clase para el menú de facturas
+# Menú para la gestión de facturas
 class InvoicesMenu(Menu):
     def __init__(self):
         super().__init__("Menú de Facturas")
         self.add_option("1", "Ver facturas", self.show_invoices)
-        self.add_option("2", "Eliminar factura", self.delete_invoice)
+        self.add_option("2", "Generar factura", self.generate_invoice)
+        self.add_option("3", "Eliminar factura", self.delete_invoice)
         self.add_option("e", "Volver", self.back)
 
-    # Método para mostrar facturas
     def show_invoices(self):
         print("Mostrando facturas...")
-        # Lógica para mostrar facturas
+        im = PaymentsManager()
+        im.Show()
 
-    # Método para eliminar factura
+    def generate_invoice(self):
+        print("Generando factura...")
+        im = PaymentsManager()
+        im.GenerateInvoice()
+
     def delete_invoice(self):
         print("Eliminando factura...")
-        # Lógica para eliminar factura
+        im = PaymentsManager()
+        invoice_id = input("Ingrese el ID de la factura a eliminar: ")
+        im.DeletedRecord({"ID": invoice_id})
+        print("Factura eliminada (si el ID fue encontrado).")
 
-    # Método para volver al menú principal
     def back(self):
         print("Volviendo al menú principal...")
-        main_menu.run()
+        MainMenu().run()
 
-# Clase para el menú de logueo
-class LoginMenu(Menu):
-    def __init__(self):
-        super().__init__("Menú de Logueo")
-        self.add_option("1", "Ingresar usuario", self.username)
-        self.add_option("2", "Ingresar contraseña", self.password)
-
-# Clase para el menú de registro
-class RegisterMenu(Menu):
-    def __init__(self):
-        super().__init__("Menú de Registro")
-        self.add_option("1", "Ingresar usuario", self.username)
-        self.add_option("2", "Ingresar contraseña", self.password)
 
 if __name__ == "__main__":
-    main_menu = MainMenu()  # Renamed instance to avoid conflict
-    main_menu.run()  # Renamed method to avoid conflict
+    main_menu = LoginMenu()
+    main_menu.run()
