@@ -8,6 +8,7 @@ from models import User, Package, Shipment, Invoice
 LOGIN_OPTION = "1"
 REGISTER_OPTION = "2"
 EXIT_OPTION = "q"
+MESSAGGE_MAIN_MENU = "MESSAGGE_MAIN_MENU"
 
 # Clase base para la creación de menús
 class Menu:
@@ -158,13 +159,17 @@ class PackageMenu(Menu):
         pm = PackageManager()
         pm.show()
 
-    def add_package(self):
+    def add_package(self,):
         """
         Permite agregar un nuevo paquete.
         """
         print("Agregando paquete...")
         pm = PackageManager()
-        pm.add_package()
+
+        package_name= input("Ingrese el name del paquete: ")
+        package_type = input("Ingrese el tipo del paquete: ")
+        package_weight = input("Ingrese el peso del paquete: ")
+        pm.add_package(package_name, package_weight, package_type)
 
     def modify_package(self):
         """
@@ -172,7 +177,11 @@ class PackageMenu(Menu):
         """
         print("Modificando paquete...")
         pm = PackageManager()
-        pm.edit_record()
+        package_id = input("Ingrese el ID del paquete a modificar: ")
+        package_name = input("Ingrese el nuevo nombre del paquete: ")
+        package_weight = input("Ingrese el nuevo peso del paquete: ")
+        package_type = input("Ingrese el nuevo tipo del paquete: ")
+        pm.update_package( package_id, package_name, package_weight, package_type)
 
     def delete_package(self):
         """
@@ -180,13 +189,14 @@ class PackageMenu(Menu):
         """
         print("Eliminando paquete...")
         pm = PackageManager()
-        pm.delete_package()
+        package_id = input("Ingrese el ID del paquete a eliminar: ")
+        pm.delete_package(package_id)
 
     def back(self):
         """
         Vuelve al menú principal.
         """
-        print("Volviendo al menú principal...")
+        print("MESSAGGE_MAIN_MENU")
         MainMenu().run()
 
 # Menú para la gestión de envíos
@@ -216,7 +226,13 @@ class ShipmentMenu(Menu):
         """
         print("Agregando envío...")
         sm = ShipmentManager()
-        sm.create_shipment()
+
+        user_id = input("Ingrese el ID del envío: ")
+        package_id = input("Ingrese el ID del paquete: ")
+        cost = input("Ingrese el destino del envío: ")
+        shipment_date = input("Ingrese la fecha del envío: ")
+        status = input("Ingrese el estado del envío: ")
+        sm.create_shipment(user_id, package_id, cost, shipment_date, status)
 
     def modify_shipment(self):
         """
@@ -224,7 +240,9 @@ class ShipmentMenu(Menu):
         """
         print("Modificando envío...")
         sm = ShipmentManager()
-        sm.update_shipment_state()
+        shipment_id = input("Ingrese el ID del envío a modificar: ")
+        new_state = input("Ingrese el nuevo estado del envío: ")
+        sm.update_shipment_state( shipment_id, new_state)
 
     def delete_shipment(self):
         """
@@ -240,7 +258,7 @@ class ShipmentMenu(Menu):
         """
         Vuelve al menú principal.
         """
-        print("Volviendo al menú principal...")
+        print("MESSAGGE_MAIN_MENU")
         MainMenu().run()
 
 # Menú para la gestión de facturas
@@ -292,7 +310,7 @@ class InvoicesMenu(Menu):
         """
         Vuelve al menú principal.
         """
-        print("Volviendo al menú principal...")
+        print("MESSAGGE_MAIN_MENU")
         MainMenu().run()
 
 
