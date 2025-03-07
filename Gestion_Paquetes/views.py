@@ -89,22 +89,22 @@ class MenuPackage(Menu):
     def show_packages(self):
         print("Mostrando paquetes...")
         pm = PackageManager()
-        pm.Show()
+        pm.show()
 
     def add_package(self):
         print("Agregando paquete...")
         pm = PackageManager()
-        pm.AddPackage()
+        pm.add_package()
 
     def modify_package(self):
         print("Modificando paquete...")
         pm = PackageManager()
-        pm.EditPackage()
+        pm.edit_record()
 
     def delete_package(self):
         print("Eliminando paquete...")
         pm = PackageManager()
-        pm.DeletePackage()
+        pm.delete_package()
 
     def back(self):
         print("Volviendo al menú principal...")
@@ -123,23 +123,23 @@ class MenuShipment(Menu):
     def show_shipments(self):
         print("Mostrando envíos...")
         sm = ShipmentManager()
-        sm.Show()
+        sm.show()
 
     def add_shipment(self):
         print("Agregando envío...")
         sm = ShipmentManager()
-        sm.CreateShipment()
+        sm.create_shipment()
 
     def modify_shipment(self):
         print("Modificando envío...")
         sm = ShipmentManager()
-        sm.UpdateShipmentStatus()
+        sm.update_shipment_state()
 
     def delete_shipment(self):
         print("Eliminando envío...")
         sm = ShipmentManager()
         shipment_id = input("Ingrese el ID del envío a eliminar: ")
-        sm.DeletedRecord({"ID": shipment_id})
+        sm.delete_record({"ID": shipment_id})
         print("Envío eliminado (si el ID fue encontrado).")
 
     def back(self):
@@ -158,18 +158,17 @@ class InvoicesMenu(Menu):
     def show_invoices(self):
         print("Mostrando facturas...")
         im = PaymentsManager()
-        im.Show()
+        im.show()
 
     def generate_invoice(self):
         print("Generando factura...")
-        im = PaymentsManager()
-        im.GenerateInvoice()
+        
 
     def delete_invoice(self):
         print("Eliminando factura...")
         im = PaymentsManager()
         invoice_id = input("Ingrese el ID de la factura a eliminar: ")
-        im.DeletedRecord({"ID": invoice_id})
+        im.delete_record({"ID": invoice_id})
         print("Factura eliminada (si el ID fue encontrado).")
 
     def back(self):
