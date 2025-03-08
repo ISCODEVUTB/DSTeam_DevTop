@@ -197,23 +197,25 @@ class PackageManager(Manager):
         super().__init__("Packages")
         self.prefix = "P"  # Prefijo para generar IDs de paquetes
 
-    def add_package(self, name, weight, type):
+    def add_package(self, description, sizes, weight, type):
         """
         Registra un nuevo paquete en el sistema.
         """
         package_id = self.id_generator()
-        new_package = Package(package_id, name, weight, type)
+        new_package = Package(package_id, description, sizes, weight, type)
         self.add_record(new_package.__dict__)
         print(f"Paquete {package_id} registrado con éxito.")
 
-    def update_package(self, package_id, name=None, weight=None, type=None):
+    def update_package(self, package_id, description = None , sizes = None, weight=None, type=None):
         """
         Actualiza los datos de un paquete existente.
         """
         package = self.search_record({"ID": package_id})
         if not package.empty:
-            if name is not None:
-                package["Name"] = name
+            if description is not None:
+                package["Description"] = description
+            if sizes is not None:
+                package["Sizes"] = sizes
             if weight is not None:
                 package["Weight"] = weight
             if type is not None:

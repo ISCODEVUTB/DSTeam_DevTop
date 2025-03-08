@@ -166,10 +166,11 @@ class PackageMenu(Menu):
         print("Agregando paquete...")
         pm = PackageManager()
 
-        package_name= input("Ingrese el name del paquete: ")
+        package_description = input("Ingrese la descripción del paquete: ")
+        package_sizes = input("Ingrese las dimensiones del paquete: ")       
         package_type = input("Ingrese el tipo del paquete: ")
         package_weight = input("Ingrese el peso del paquete: ")
-        pm.add_package(package_name, package_weight, package_type)
+        pm.add_package(package_description, package_sizes, package_weight, package_type)
 
     def modify_package(self):
         """
@@ -178,10 +179,12 @@ class PackageMenu(Menu):
         print("Modificando paquete...")
         pm = PackageManager()
         package_id = input("Ingrese el ID del paquete a modificar: ")
-        package_name = input("Ingrese el nuevo nombre del paquete: ")
+        package_description = input("Ingrese la nueva descripción del paquete: ")
+        package_sizes = input("Ingrese las nuevas dimensiones del paquete: ")
         package_weight = input("Ingrese el nuevo peso del paquete: ")
         package_type = input("Ingrese el nuevo tipo del paquete: ")
-        pm.update_package( package_id, package_name, package_weight, package_type)
+        pm.update_package( package_id, package_description, package_sizes,
+                           package_weight, package_type)
 
     def delete_package(self):
         """
