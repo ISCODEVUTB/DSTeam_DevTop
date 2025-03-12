@@ -3,13 +3,13 @@ from unittest.mock import patch
 import main
 
 
-@patch('src.views.LoginMenu.run')
+@patch('src.gui.login_menu.LoginMenu.run')
 def test_main(mock_run):
     """
     Prueba la función principal para asegurarse
     de que el menú de inicio de sesión se ejecute.
     """
-    main.main()
+    main()
     mock_run.assert_called_once()
 
 

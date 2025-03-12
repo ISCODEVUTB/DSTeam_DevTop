@@ -5,12 +5,14 @@ from datetime import date
 
 # Pruebas para la clase Package
 def test_package_creation():
-    package = Package("P0001", "Laptop", 2.5, "Bogota")
+    package = Package("P0001", "Laptop", 2.5, "Bogota", "Calle 123", "Fragil")
     assert package.package_id == "P0001"
     assert package.name == "Laptop"
     assert math.isclose(package.weight, 2.5, rel_tol=1e-09, abs_tol=1e-09)
     assert package.destination == "Bogota"
-    assert str(package) == "Package P0001: Laptop, 2.5 kg, Bogota"
+    assert package.delivery_address == "Calle 123"
+    assert package.special_instructions == "Fragil"
+    assert str(package) == "Package P0001: Laptop, 2.5 kg, Bogota, Calle 123"
 
 
 # Pruebas para la clase User
@@ -34,9 +36,11 @@ def test_user_creation():
 
 # Pruebas para la clase Shipment
 def test_shipment_creation():
-    package = Package("P0002", "Phone", 0.5, "Los Angeles")
+    package = Package("P0002", "Phone", 0.5,
+                      "Los Angeles", "Street 456", "Handle with care")
     shipment = Shipment(
-        "S0001", "U0001", package, 50, date(2025, 3, 6), "In Transit"
+        "S0001", "U0001", package, 50, date(2025, 3, 6), "In Transit",
+        "Express", "48h"
     )
     assert shipment.shipment_id == "S0001"
     assert shipment.user_id == "U0001"
@@ -44,9 +48,11 @@ def test_shipment_creation():
     assert shipment.cost == 50
     assert shipment.date == date(2025, 3, 6)
     assert shipment.state == "In Transit"
+    assert shipment.shipping_type == "Express"
+    assert shipment.estimated_time == "48h"
     assert str(shipment) == (
         "Shipment S0001: User U0001, Package P0002, Cost: 50, "
-        "Date: 2025-03-06, State: In Transit"
+        "Date: 2025-03-06, State: In Transit, Type: Express"
     )
 
 
