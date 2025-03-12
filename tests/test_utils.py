@@ -1,14 +1,15 @@
-import pytest
-from src.utils import validate_input, generate_id
+from utils.utils import validate_input, generate_id
+
 
 def test_validate_input():
     """
     Prueba la función validate_input para diferentes casos.
     """
-    assert validate_input("username", "password") == True
-    assert validate_input("username", "") == False
-    assert validate_input("", "password") == False
-    assert validate_input(" ", "password") == False
+    assert validate_input("username", "password") is True
+    assert validate_input("username", "") is False
+    assert validate_input("", "password") is False
+    assert validate_input(" ", "password") is False
+
 
 def test_generate_id():
     """

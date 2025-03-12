@@ -1,4 +1,5 @@
-from src.views import LoginMenu
+from views.views import LoginMenu
+
 
 def main():
     """
@@ -6,6 +7,7 @@ def main():
     """
     login_menu = LoginMenu()
     login_menu.run()
+
 
 if __name__ == "__main__":
     main()

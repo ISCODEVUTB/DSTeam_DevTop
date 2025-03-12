@@ -1,4 +1,4 @@
-from views import Menu, MainMenu
+from views.views import Menu, MainMenu
 
 
 # Test para verificar la creación del menú
