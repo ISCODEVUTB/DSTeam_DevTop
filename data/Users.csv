@@ -1,0 +1,2 @@
+user_id,username,password,name,email,address,permissions
+U001,testuser,password123,Test User,test@email.com,Test Address,user
