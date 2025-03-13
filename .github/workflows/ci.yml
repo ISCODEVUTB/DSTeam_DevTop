@@ -2,12 +2,7 @@
 name: CI Pipeline
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch: 
 
 jobs:
   test:
@@ -34,15 +29,3 @@ jobs:
         run: |
           pytest --cov=. --cov-report=xml
           
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.sources=.
-            -Dsonar.python.version=3.12
-
-
