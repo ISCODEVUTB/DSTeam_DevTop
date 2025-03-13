@@ -1,8 +1,8 @@
-from src.controllers.ShipmentManager import ShipmentManager
-from src.controllers.PackagesManager import PackageManager
-from src.controllers.LoginManager import LoginManager
-from src.controllers.PaymentsManager import PaymentsManager
-from src.controllers.UsersManager import UserManager
+from controllers.ShipmentManager import ShipmentManager
+from controllers.PackagesManager import PackageManager
+from controllers.LoginManager import LoginManager
+from controllers.PaymentsManager import PaymentsManager
+from controllers.UsersManager import UserManager
 
 __all__ = ["ShipmentManager",
            "PackageManager",
