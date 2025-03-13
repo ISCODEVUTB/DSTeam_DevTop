@@ -1,7 +1,6 @@
-from src.utils.utils import generate_id
 import pandas as pd
 import os
-from src.utils.constants import NO_FOUND
+from utils import NO_FOUND, generate_id
 
 
 class Manager:

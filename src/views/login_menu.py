@@ -1,6 +1,6 @@
-from controllers.controllers import LoginManager
-from views.views import Menu
-from utils.constants import LOGIN_OPTION, REGISTER_OPTION, EXIT_OPTION
+from controllers import LoginManager
+from views import Menu
+from utils import LOGIN_OPTION, REGISTER_OPTION, EXIT_OPTION
 
 
 class LoginMenu(Menu):

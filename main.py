@@ -1,4 +1,4 @@
-from views.views import LoginMenu
+from views import LoginMenu
 
 
 def main():

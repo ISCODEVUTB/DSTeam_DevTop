@@ -1,6 +1,6 @@
-from src.controllers.Manager import Manager
-from src.models.User import User
-from src.utils.utils import validate_input
+from controllers import Manager
+from models import User
+from utils import validate_input
 
 
 class LoginManager(Manager):

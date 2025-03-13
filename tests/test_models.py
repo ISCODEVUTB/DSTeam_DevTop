@@ -1,4 +1,4 @@
-from models.models import User, Package, Shipment, Invoice
+from models import User, Package, Shipment, Invoice
 
 
 def test_user_creation():
@@ -11,7 +11,7 @@ def test_user_creation():
 def test_package_creation():
     package = Package("Test Package", 2.5, "Small")
     assert package.description == "Test Package"
-    assert package.weight == 2.5
+    assert abs(package.weight - 2.5) < 1e-9
     assert package.size == "Small"
 
 
@@ -24,5 +24,5 @@ def test_shipment_creation():
 
 def test_invoice_creation():
     invoice = Invoice(100.0, "Pending")
-    assert invoice.amount == 100.0
+    assert abs(invoice.amount - 100.0) < 1e-9
     assert invoice.status == "Pending"

@@ -1,5 +1,5 @@
-from controllers.controllers import PackageManager
-from src.views.views import Menu, MainMenu
+from controllers import PackageManager
+from views import Menu, MainMenu
 
 
 class PackageMenu(Menu):

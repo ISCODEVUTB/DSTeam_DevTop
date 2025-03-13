@@ -1,4 +1,4 @@
-from utils.utils import validate_input, generate_id
+from utils import validate_input, generate_id
 
 
 def test_validate_input():

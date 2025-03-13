@@ -1,4 +1,4 @@
-from src.controllers.Manager import Manager
+from controllers import Manager
 
 
 class UserManager(Manager):

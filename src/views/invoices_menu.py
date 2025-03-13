@@ -1,6 +1,6 @@
-from .main_menu import MainMenu
-from .menu import Menu
-from controllers.controllers import PaymentsManager
+from views import MainMenu
+from views import Menu
+from controllers import PaymentsManager
 
 
 class InvoicesMenu(Menu):

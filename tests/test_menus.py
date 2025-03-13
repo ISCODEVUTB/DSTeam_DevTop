@@ -1,5 +1,5 @@
-from views.views import Menu, MainMenu, ShipmentMenu, PackageMenu
-from views.views import LoginMenu, InvoicesMenu
+from views import Menu, MainMenu, ShipmentMenu, PackageMenu
+from views import LoginMenu, InvoicesMenu
 
 
 # Test para verificar la creación del menú
@@ -106,6 +106,8 @@ def test_menu_display_format():
     menu = Menu("Menú de Prueba")
 
     def dummy_function():
+        # Esta función es un marcador de posición para las pruebas
+        # y no realiza ninguna acción.
         pass
     menu.add_option("1", "Primera opción", dummy_function)
     menu.add_option("2", "Segunda opción", dummy_function)

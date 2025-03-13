@@ -1,5 +1,5 @@
-from src.views.menu import Menu, PackageMenu, ShipmentMenu, InvoicesMenu
-from src.utils.constants import EXIT_OPTION
+from views import Menu, PackageMenu, ShipmentMenu, InvoicesMenu
+from utils import EXIT_OPTION
 
 
 class MainMenu(Menu):

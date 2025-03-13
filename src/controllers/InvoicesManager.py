@@ -1,5 +1,5 @@
-from src.models.Invoice import Invoice
-from src.controllers.Manager import Manager
+from models import Invoice
+from controllers import Manager
 
 
 class InvoiceManager(Manager):

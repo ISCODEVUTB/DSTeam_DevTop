@@ -1,5 +1,5 @@
-from controllers.controllers import ShipmentManager
-from src.views.views import Menu, MainMenu
+from controllers import ShipmentManager
+from views import Menu, MainMenu
 
 
 class ShipmentMenu(Menu):

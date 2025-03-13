@@ -1,4 +1,4 @@
-from utils.constants import EXIT_OPTION
+from utils import EXIT_OPTION
 
 
 class Menu:

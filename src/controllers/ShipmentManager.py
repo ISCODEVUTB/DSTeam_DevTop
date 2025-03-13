@@ -1,6 +1,6 @@
-from src.models.Shipment import Shipment
-from src.controllers.Manager import Manager
-from src.utils.constants import NO_FOUND
+from models import Shipment
+from controllers import Manager
+from utils import NO_FOUND
 
 
 class ShipmentManager(Manager):

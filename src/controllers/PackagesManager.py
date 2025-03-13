@@ -1,5 +1,5 @@
-from src.controllers.Manager import Manager
-from src.models.Package import Package
+from controllers import Manager
+from models import Package
 
 
 class PackageManager(Manager):
