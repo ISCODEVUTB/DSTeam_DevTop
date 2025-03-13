@@ -1,5 +1,5 @@
 from models import Shipment
-from controllers import Manager
+from controllers.Manager import Manager
 from utils import NO_FOUND
 
 

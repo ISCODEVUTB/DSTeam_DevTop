@@ -1,5 +1,5 @@
-from views import Menu, PackageMenu, ShipmentMenu, InvoicesMenu
 from utils import EXIT_OPTION
+from views.menu import Menu
 
 
 class MainMenu(Menu):
@@ -17,6 +17,7 @@ class MainMenu(Menu):
         """
         Muestra el menú de paquetes.
         """
+        from views.package_menu import PackageMenu
         print("Ingresando al menú de paquetes...")
         PackageMenu().run()
 
@@ -24,6 +25,7 @@ class MainMenu(Menu):
         """
         Muestra el menú de envíos.
         """
+        from views.shipment_menu import ShipmentMenu
         print("Ingresando al menú de envíos...")
         ShipmentMenu().run()
 
@@ -31,6 +33,7 @@ class MainMenu(Menu):
         """
         Muestra el menú de facturas.
         """
+        from views.invoices_menu import InvoicesMenu
         print("Ingresando al menú de facturas...")
         InvoicesMenu().run()
 

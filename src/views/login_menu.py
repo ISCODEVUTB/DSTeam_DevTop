@@ -1,5 +1,5 @@
 from controllers import LoginManager
-from views import Menu
+from views.menu import Menu
 from utils import LOGIN_OPTION, REGISTER_OPTION, EXIT_OPTION
 
 

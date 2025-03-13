@@ -1,4 +1,4 @@
-from controllers import Manager
+from controllers.Manager import Manager
 
 
 class PaymentsManager(Manager):

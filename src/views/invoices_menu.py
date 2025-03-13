@@ -1,5 +1,4 @@
-from views import MainMenu
-from views import Menu
+from views.menu import Menu
 from controllers import PaymentsManager
 
 
@@ -48,8 +47,11 @@ class InvoicesMenu(Menu):
         print("Factura eliminada (si el ID fue encontrado).")
 
     def back(self):
+
         """
         Vuelve al menú principal.
         """
+
+        from views import MainMenu
         print("MESSAGGE_MAIN_MENU")
         MainMenu().run()

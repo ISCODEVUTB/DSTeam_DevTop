@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from utils import NO_FOUND, generate_id
+from utils import NO_FOUND
 
 
 class Manager:
@@ -31,11 +31,16 @@ class Manager:
         print("Datos guardados con éxito.")
 
     def id_generator(self):
-        """
-        Genera un ID único basado en los IDs existentes en el DataFrame.
-        """
-        existing_ids = self.data["ID"].dropna().astype(str)
-        return generate_id(self.prefix, existing_ids)
+        """Generate a new unique ID based on the entity type."""
+        id_column = next(col for col in self.data.columns if col.endswith('_id'))
+        if self.data.empty:
+            return f"{id_column[0].upper()}001"
+        existing_ids = self.data[id_column].dropna().astype(str)
+        if existing_ids.empty:
+            return f"{id_column[0].upper()}001"
+        max_id = max(existing_ids)
+        next_number = int(max_id[1:]) + 1
+        return f"{max_id[0]}{next_number:03d}"
 
     def add_record(self, record):
         """

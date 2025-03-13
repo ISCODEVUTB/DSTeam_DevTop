@@ -1,5 +1,5 @@
 from controllers import PackageManager
-from views import Menu, MainMenu
+from views.menu import Menu
 
 
 class PackageMenu(Menu):
@@ -64,5 +64,6 @@ class PackageMenu(Menu):
         """
         Vuelve al menú principal.
         """
+        from views import MainMenu
         print("MESSAGGE_MAIN_MENU")
         MainMenu().run()

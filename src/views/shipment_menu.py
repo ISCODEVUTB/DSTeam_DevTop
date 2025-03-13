@@ -1,5 +1,5 @@
 from controllers import ShipmentManager
-from views import Menu, MainMenu
+from views.menu import Menu
 
 
 class ShipmentMenu(Menu):
@@ -60,5 +60,7 @@ class ShipmentMenu(Menu):
         """
         Vuelve al menú principal.
         """
+
+        from views import MainMenu
         print("MESSAGGE_MAIN_MENU")
         MainMenu().run()
